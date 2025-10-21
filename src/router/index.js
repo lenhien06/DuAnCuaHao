@@ -102,38 +102,38 @@ const router = createRouter({
   ]
 })
 
-// ============ GLOBAL GUARD (role-based) ============
-router.beforeEach((to, from, next) => {
-  const user = JSON.parse(localStorage.getItem('user') || 'null')
+// // ============ GLOBAL GUARD (role-based) ============
+// router.beforeEach((to, from, next) => {
+//   const user = JSON.parse(localStorage.getItem('user') || 'null')
 
-  // Trang public: cho vào luôn
-  if (to.matched.some(r => r.meta?.public)) {
-    // Nếu đã đăng nhập mà cố vào /login hoặc /register -> đẩy về đúng trang theo role
-    if ((to.name === 'login' || to.name === 'register') && user) {
-      return next(user.role === 'admin' ? { name: 'admin.dashboard' } : { name: 'home' })
-    }
-    return next()
-  }
+//   // Trang public: cho vào luôn
+//   if (to.matched.some(r => r.meta?.public)) {
+//     // Nếu đã đăng nhập mà cố vào /login hoặc /register -> đẩy về đúng trang theo role
+//     if ((to.name === 'login' || to.name === 'register') && user) {
+//       return next(user.role === 'admin' ? { name: 'admin.dashboard' } : { name: 'home' })
+//     }
+//     return next()
+//   }
 
-  // Yêu cầu đăng nhập?
-  if (to.matched.some(r => r.meta?.requiresAuth) && !user) {
-    alert('Vui lòng đăng nhập để tiếp tục!')
-    localStorage.setItem('redirectAfterLogin', to.fullPath)
-    return next({ name: 'login' })
-  }
+//   // Yêu cầu đăng nhập?
+//   if (to.matched.some(r => r.meta?.requiresAuth) && !user) {
+//     alert('Vui lòng đăng nhập để tiếp tục!')
+//     localStorage.setItem('redirectAfterLogin', to.fullPath)
+//     return next({ name: 'login' })
+//   }
 
-  // Yêu cầu admin?
-  if (to.matched.some(r => r.meta?.requiresAdmin) && user?.role !== 'admin') {
-    alert('Bạn không có quyền truy cập trang này!')
-    return next(user ? { name: 'home' } : { name: 'login' })
-  }
+//   // Yêu cầu admin?
+//   if (to.matched.some(r => r.meta?.requiresAdmin) && user?.role !== 'admin') {
+//     alert('Bạn không có quyền truy cập trang này!')
+//     return next(user ? { name: 'home' } : { name: 'login' })
+//   }
 
-  // Nếu đã đăng nhập mà chuyển vào /login (do link tay) -> đưa về đúng home theo role
-  if ((to.name === 'login' || to.name === 'register') && user) {
-    return next(user.role === 'admin' ? { name: 'admin.dashboard' } : { name: 'home' })
-  }
+//   // Nếu đã đăng nhập mà chuyển vào /login (do link tay) -> đưa về đúng home theo role
+//   if ((to.name === 'login' || to.name === 'register') && user) {
+//     return next(user.role === 'admin' ? { name: 'admin.dashboard' } : { name: 'home' })
+//   }
 
-  next()
-})
+//   next()
+// })
 
 export default router
